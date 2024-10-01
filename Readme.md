@@ -8,6 +8,8 @@ Relyft is a web application built using the MERN stack (MongoDB, Express.js, Rea
 - Task Management
 - Real-time Updates
 - Responsive Design
+- Notifications
+- Dark Mode
 
 ## Installation
 
@@ -55,4 +57,5 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 This project is licensed under the MIT License.
 
 ## Contact
-For any inquiries, please contact [your-email@example.com](mailto:your-email@example.com).
+For any inquiries, please contact [adharbattulwar24@gmail.com](mailto:adharbattulwar24@gmail.com).
+
