@@ -62,18 +62,25 @@ const OtpVerification: React.FC<Props> = () => {
             I havent Recieved the Code {time}
           </Button>
         ) : (
-          <RolePopup />
+          <Button
+            className="flex w-fit p-2 rounded-xl text-gray-600 font-semibold px-4 bg-gray-200"
+            disabled={false}
+          >
+            <RolePopup />
+          </Button>
         )}
 
         <div className="w-full flex justify-between">
           <Link to="/login">
-          <Button className="flex w-fit p-2 rounded-full text-4xl font-semibold bg-gray-200">
-            <IoIosArrowRoundBack />
-          </Button>
+            <Button className="flex w-fit p-2 rounded-full text-4xl font-semibold bg-gray-200">
+              <IoIosArrowRoundBack />
+            </Button>
           </Link>
-          <Button className="flex w-fit p-2 px-6 rounded-full gap-2 justify-between items-center bg-gray-200">
-            Next <IoIosArrowRoundForward className="text-4xl font-semibold" />
-          </Button>
+          <Link to="/userDetails">
+            <Button className="flex w-fit p-2 px-6 rounded-full gap-2 justify-between items-center bg-gray-200">
+              Next <IoIosArrowRoundForward className="text-4xl font-semibold" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
