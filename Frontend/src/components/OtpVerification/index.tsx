@@ -3,6 +3,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { Button } from "../ui/button";
 import { RolePopup } from "../Popups/otpPopup";
+import { Link } from "react-router-dom";
 
 type Props = object;
 
@@ -65,9 +66,11 @@ const OtpVerification: React.FC<Props> = () => {
         )}
 
         <div className="w-full flex justify-between">
+          <Link to="/login">
           <Button className="flex w-fit p-2 rounded-full text-4xl font-semibold bg-gray-200">
             <IoIosArrowRoundBack />
           </Button>
+          </Link>
           <Button className="flex w-fit p-2 px-6 rounded-full gap-2 justify-between items-center bg-gray-200">
             Next <IoIosArrowRoundForward className="text-4xl font-semibold" />
           </Button>

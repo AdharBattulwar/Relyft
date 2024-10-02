@@ -3,6 +3,7 @@ import { FaApple, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 type Props = object;
 
@@ -24,9 +25,11 @@ const Login: React.FC<Props> = () => {
             </div>
           </div>
           <div className="w-full">
-            <Button className="w-full p-4 rounded-xl bg-black text-white font-medium flex items-center justify-center text-lg">
-              Continue
-            </Button>
+            <Link to="/otp">
+              <Button className="w-full p-3 rounded-xl bg-black text-white">
+                Continue
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="my-4 flex items-center justify-center">
