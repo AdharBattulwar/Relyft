@@ -1,86 +1,87 @@
 import React, { useEffect, useState } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
-import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { Button } from "../ui/button";
 import { RolePopup } from "../Popups/otpPopup";
 import { Link } from "react-router-dom";
+import { MdKeyboardBackspace } from "react-icons/md";
 
 type Props = object;
 
 const OtpVerification: React.FC<Props> = () => {
-  const [time, setTime] = useState(true);
+  const [seconds, setSeconds] = useState(30);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTime(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (seconds > 0) {
+      const timer = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds - 1);
+      }, 1000);
+      return () => clearInterval(timer); // Clean up the interval on component unmount
+    }
+  }, [seconds]);
 
   return (
-    <div className="h-screen w-full pt-8 p-4 flex flex-col justify-between">
-      <div className="w-full gap-6 flex flex-col">
-        <div className="text-xl font-semibold ">
-          Enter the OTP sent to your phone number
+    <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
+      {/* TODO: Setlink */}
+      <Link to={"/forgot"}>
+        <div className="absolute top-14 left-7">
+          <Button className="p-2 rounded-full bg-[#F2F2F2]">
+            <MdKeyboardBackspace className="text-3xl " />
+          </Button>
         </div>
-        <div className="flex justify-center items-center">
-          <InputOTP maxLength={6}>
-            <InputOTPGroup className="rounded-xl gap-2 ">
+      </Link>
+      <div className="flex flex-col justify-center gap-4 items-center mt-24">
+        <div className="text-4xl font-bold">Enter Your OTP</div>
+        <div className="line-clamp-2 px-4 text-xl text-[#A5A5A5] ">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. In
+          voluptatem, nemo, amet quod eligendi rerum quos quis aperiam optio
+          velit saepe quia tenetur ipsum esse dolor exercitationem repellendus
+          beatae distinctio?
+        </div>
+      </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-center flex-col gap-4">
+          <InputOTP maxLength={4}>
+            <InputOTPGroup className="rounded-xl gap-4 ">
               <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
+                className="size-16 border-none bg-gray-200 rounded-xl"
                 index={0}
               />
               <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
+                className="size-16 border-none bg-gray-200 rounded-xl"
                 index={1}
               />
               <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
+                className="size-16 border-none bg-gray-200 rounded-xl"
                 index={2}
               />
               <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
+                className="size-16 border-none bg-gray-200 rounded-xl"
                 index={3}
-              />
-              <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
-                index={4}
-              />
-              <InputOTPSlot
-                className="border-none bg-gray-200 rounded-xl"
-                index={5}
               />
             </InputOTPGroup>
           </InputOTP>
         </div>
-        {time ? (
-          <Button
-            className="flex w-fit p-2 rounded-xl text-gray-600 font-semibold px-4 bg-gray-200"
-            disabled={true}
-            onClick={() => setTime(false)}
-          >
-            I havent Recieved the Code {time}
-          </Button>
-        ) : (
-          <Button
-            className="flex w-fit p-2 rounded-xl text-gray-600 font-semibold px-4 bg-gray-200"
-            disabled={false}
-          >
-            <RolePopup />
-          </Button>
-        )}
-
-        <div className="w-full flex justify-between">
-          <Link to="/login">
-            <Button className="flex w-fit p-2 rounded-full text-4xl font-semibold bg-gray-200">
-              <IoIosArrowRoundBack />
+        <div className="flex items-center justify-center mt-6">
+          {seconds ? (
+            <Button
+              className="flex items-center justify-center w-fit p-2 font-semibold px-4"
+              disabled={true}
+            >
+              Resend the Code in <div className="text-myGreen">&nbsp; {seconds} &nbsp;</div> sec
             </Button>
-          </Link>
-          <Link to="/userDetails">
-            <Button className="flex w-fit p-2 px-6 rounded-full gap-2 justify-between items-center bg-gray-200">
-              Next <IoIosArrowRoundForward className="text-4xl font-semibold" />
+          ) : (
+            <Button
+              className="flex w-fit items-center justify-center p-2 font-semibold px-4 "
+              disabled={false}
+            >
+              <RolePopup/>
             </Button>
-          </Link>
+          )}
+        </div>
+        <div className="flex mt-4">
+          <Button className="bg-[#46C96B] text-2xl w-full text-white font-semibold rounded-xl py-6 ">
+            Verify Now
+          </Button>
         </div>
       </div>
     </div>
