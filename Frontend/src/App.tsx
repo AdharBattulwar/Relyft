@@ -3,6 +3,7 @@ import OtpVerification from "./components/OtpVerification";
 import Signup from "./components/SignUp";
 import Signin from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPass";
+import ResetPass from "./components/ResetPassword";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/reset" element={<ResetPass />} />
       </Routes>
     </>
   );

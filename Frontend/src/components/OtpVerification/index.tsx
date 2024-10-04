@@ -67,22 +67,25 @@ const OtpVerification: React.FC<Props> = () => {
               className="flex items-center justify-center w-fit p-2 font-semibold px-4"
               disabled={true}
             >
-              Resend the Code in <div className="text-myGreen">&nbsp; {seconds} &nbsp;</div> sec
+              Resend the Code in{" "}
+              <div className="text-myGreen">&nbsp; {seconds} &nbsp;</div> sec
             </Button>
           ) : (
             <Button
               className="flex w-fit items-center justify-center p-2 font-semibold px-4 "
               disabled={false}
             >
-              <RolePopup/>
+              <RolePopup />
             </Button>
           )}
         </div>
-        <div className="flex mt-4">
-          <Button className="bg-[#46C96B] text-2xl w-full text-white font-semibold rounded-xl py-6 ">
-            Verify Now
-          </Button>
-        </div>
+        <Link to={"/reset"}>
+          <div className="flex mt-4">
+            <Button className="bg-[#46C96B] text-2xl w-full text-white font-semibold rounded-xl py-6 ">
+              Verify Now
+            </Button>
+          </div>
+        </Link>
       </div>
     </div>
   );
