@@ -13,7 +13,7 @@ const OtpVerification: React.FC<Props> = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setTime(false);
-    }, 30000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
