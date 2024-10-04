@@ -27,27 +27,27 @@ const handleUserSignUp = async (req, res) => {
     return res.status(409).json({ success: false, msg: "User already Exists" });
   }
 
-  const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const avatarLocalPath = req.files?.avatar[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-  if (!avatarLocalPath) {
-    res.status(400).json({ success: false, msg: "Avatar Path is required" });
-  }
+  // if (!avatarLocalPath) {
+  //   res.status(400).json({ success: false, msg: "Avatar Path is required" });
+  // }
 
-  const avatar = await handleFileUploadCloudinary(avatarLocalPath);
-  const coverImage = await handleFileUploadCloudinary(coverImageLocalPath);
+  // const avatar = await handleFileUploadCloudinary(avatarLocalPath);
+  // const coverImage = await handleFileUploadCloudinary(coverImageLocalPath);
 
-  if (!avatar) {
-    res.status(404).json({ success: false, msg: "avatar file not uploaded" });
-  }
+  // if (!avatar) {
+  //   res.status(404).json({ success: false, msg: "avatar file not uploaded" });
+  // }
 
   await user
     .create({
       username: username,
       email: email,
       fullName: fullName,
-      avatar: avatar.url,
-      coverImage: coverImage?.url || "",
+      // avatar: avatar.url,
+      // coverImage: coverImage?.url || "",
       password: await Encrypt(password),
     })
     .then(() => {

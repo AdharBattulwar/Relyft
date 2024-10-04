@@ -28,9 +28,9 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
-    coverImage: {
-      type: String,
-    },
+    // coverImage: {
+    //   type: String,
+    // },
     password: {
       type: String,
       required: [true, "Password is required"],

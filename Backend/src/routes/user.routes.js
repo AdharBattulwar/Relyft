@@ -15,13 +15,13 @@ import { handleUserVerfication } from "../middlewares/auth.middleware.js";
 const userRouter = Router();
 
 userRouter.route("/").get(handleGetAllUsers);
-userRouter.route("/login").get().post(handleUserLogin);
+userRouter.route("/signin").get().post(handleUserLogin);
 userRouter.route("/logout").get(handleUserVerfication, handleLogoutUser);
 userRouter.route("/signup").post(
-  upload.fields([
-    { name: "avatar", maxCount: 1 },
-    { name: "coverImage", maxCount: 1 },
-  ]),
+  // upload.fields([
+  //   { name: "avatar", maxCount: 1 },
+  //   { name: "coverImage", maxCount: 1 },
+  // ]),
   handleUserSignUp
 );
 
