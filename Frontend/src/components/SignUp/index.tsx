@@ -8,13 +8,22 @@ import { BsPersonCircle } from "react-icons/bs";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Checkbox } from "../ui/checkbox";
+import { MdKeyboardBackspace } from "react-icons/md";
 
 type Props = object;
 
 const Signup: React.FC<Props> = () => {
   return (
     <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
-      <div className="flex flex-col justify-center gap-4 items-center mt-24">
+      {/* TODO : Set Link */}
+      <Link to={"/"}>
+        <div className="absolute top-14 left-7">
+          <Button className="p-2 rounded-full bg-[#F2F2F2]">
+            <MdKeyboardBackspace className="text-3xl " />
+          </Button>
+        </div>
+      </Link>
+      <div className="flex flex-col justify-center gap-4 items-center mt-12">
         <div className="text-4xl font-bold">Sign Up</div>
         <div className="line-clamp-2 px-4 text-xl text-[#A5A5A5] ">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. In
@@ -51,7 +60,7 @@ const Signup: React.FC<Props> = () => {
         </div>
       </div>
       <div className="flex text-xl font-medium gap-1 justify-center">
-        Already Have an Account ?<Link to={"/"} className="text-[#46C96B]">Sign In</Link>
+        Already Have an Account ?<Link to={"/signin"} className="text-[#46C96B]">Sign In</Link>
       </div>
     </div>
   );
