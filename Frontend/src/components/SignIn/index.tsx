@@ -7,10 +7,27 @@ import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
+import axios from "axios";
 
 type Props = object;
 
 const Signin: React.FC<Props> = () => {
+  const handleSignin = async (e: any) => {
+    e.preventDefault();
+    const userdata = {
+      email: e.target.email.value,
+      password: e.target.password.value,
+    };
+
+    console.log(userdata);
+
+    await axios.post("http://localhost:8000/api/v1/user/signin", userdata).then((res) => {
+      console.log("success");
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
   return (
     <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
         <div className="absolute top-14 left-7" >
@@ -28,17 +45,20 @@ const Signin: React.FC<Props> = () => {
         </div>
       </div>
       <div className="flex flex-col gap-3">
+        <form onSubmit={handleSignin}>
         <div className="flex flex-col gap-4">
           <Input
             className="py-2 text-lg font-medium"
             Icon={<HiOutlineMail />}
             type="email"
+            name="email"
             placeholder=""
           />
           <Input
             className="py-2 text-lg font-medium"
             Icon={<RiLockPasswordFill />}
             type="password"
+            name="password"
             placeholder=""
           />
         </div>
@@ -52,6 +72,7 @@ const Signin: React.FC<Props> = () => {
             Sign In
           </Button>
         </div>
+        </form> 
       </div>
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="text-[#A5A5A5] text-xl">Or Sign In With</div>
