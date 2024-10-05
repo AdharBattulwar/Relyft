@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { BsPersonCircle } from "react-icons/bs";
@@ -15,6 +15,9 @@ import { SERVER_URL } from "../utils/constants";
 type Props = object;
 
 const Signup: React.FC<Props> = () => {
+
+  const navigate = useNavigate();
+
   const handleSignup = async (e: any) => {
     e.preventDefault();
     const userdata = {
@@ -30,6 +33,8 @@ const Signup: React.FC<Props> = () => {
       .then((res) => {
         console.log("success");
         console.log(res);
+        if (res.data.success === true) navigate("/dashboard/home");
+        else console.log("error");
       })
       .catch((err) => {
         console.log(err);

@@ -4,6 +4,8 @@ import Signup from "./components/SignUp";
 import Signin from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPass";
 import ResetPass from "./components/ResetPassword";
+import Home from "./components/Dashboard/Home";
+import Profile from "./components/Dashboard/Profile";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset" element={<ResetPass />} />
+        <Route path="/dashboard/home" element={<Home />} />
+        <Route path="/dashboard/Profile" element={<Profile />} />
       </Routes>
     </>
   );
