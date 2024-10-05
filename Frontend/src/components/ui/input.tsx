@@ -10,12 +10,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, Icon, type, ...props }, ref) => {
     return (
       <>
-        <div className="flex items-center bg-[#f2f2f2] gap-3 rounded-xl p-4">
+        <div className="flex items-center bg-[#f2f2f2] gap-3 rounded-xl px-4 py-2">
           <div className="text-myGreen text-2xl bg-green-100 rounded-full p-2">{Icon}</div>
           <input
             type={type}
             className={cn(
-              "flex w-full bg-[#f2f2f2] rounded-xl text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+              "flex w-full bg-[#f2f2f2] rounded-xl text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
               className
             )}
             ref={ref}
