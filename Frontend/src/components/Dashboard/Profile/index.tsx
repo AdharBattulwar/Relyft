@@ -1,4 +1,3 @@
-import React from "react";
 import Footer from "../Footer";
 import { Button } from "@/components/ui/button";
 import { MdKeyboardBackspace } from "react-icons/md";
@@ -10,8 +9,6 @@ import { FaCcMastercard } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { IoMdHelpCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
-
-// type Props = object
 
 const Profile = () => {
   return (
