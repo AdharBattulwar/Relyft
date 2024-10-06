@@ -5,7 +5,7 @@ const handleUserVerfication = async (req, res, next) => {
   try {
     const token =
       req.cookies.AccessToken ||
-      req.header("Authorization").replace("Bearer ", "");
+      req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
       return res.status(401).json({ success: false, msg: "Need Access Token" });
