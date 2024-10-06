@@ -29,11 +29,14 @@ const Signup: React.FC<Props> = () => {
     console.log(userdata);
 
     await axios
-      .post(`${SERVER_URL}/api/v1/user/signup`, userdata)
+      .post(`${SERVER_URL}/api/v1/user/signup`, userdata,{
+        withCredentials: true
+      })
       .then((res) => {
         console.log("success");
         console.log(res);
-        if (res.data.success === true) navigate("/dashboard/home");
+        // TODO : Set Link And add Cookie to the browser for SignUp
+        if (res.data.success === true) navigate("/signin");
         else console.log("error");
       })
       .catch((err) => {

@@ -25,12 +25,17 @@ const Signin: React.FC<Props> = () => {
     console.log(userdata);
 
     await axios
-      .post(`${SERVER_URL}/api/v1/user/signin`, userdata)
+      .post(`${SERVER_URL}/api/v1/user/signin`, userdata, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log("success");
         console.log(res);
-        if (res.data.success === true) navigate("/dashboard/home");
-        else console.log("error");
+        if (res.data.success === true) {
+          navigate("/dashboard/home");
+        } else {
+          console.log("error");
+        }
       })
       .catch((err) => {
         console.log(err);

@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-// import { SERVER_URL } from "@/components/utils/constants";
 import axios from "axios";
+import { SERVER_URL } from "@/components/utils/constants";
 
 type Props = object;
 
@@ -22,9 +22,11 @@ const Home: React.FC<Props> = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    console.log("Logout Clicked")
+    console.log("Logout Clicked");
     await axios
-      .get(`http://localhost:8000/api/v1/user/logout`)
+      .get(`${SERVER_URL}/api/v1/user/logout`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log("success");
         console.log(res);
@@ -57,7 +59,7 @@ const Home: React.FC<Props> = () => {
                 </Button>
                 <Button
                   className="flex items-center justify-center text-sm bg-green-100 w-full rounded-xl py-2"
-                  onClick={() => handleLogout}
+                  onClick={() => handleLogout()}
                 >
                   Logout
                 </Button>
