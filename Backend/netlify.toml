@@ -1,5 +1,5 @@
 [build]
-  functions = "./src"
+  functions = "functions"
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
