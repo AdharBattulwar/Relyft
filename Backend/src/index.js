@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import serverless from "serverless-http";
 
 dotenv.config({
   path: "./src/config/.env",
@@ -14,3 +15,5 @@ import app from "./app.js";
 app.listen(process.env.PORT || 3000, () => {
   console.log(`The Server is running on port ${process.env.PORT}`);
 });
+
+export const handler = serverless(app);

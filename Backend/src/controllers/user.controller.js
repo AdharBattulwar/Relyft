@@ -54,7 +54,7 @@ const handleUserSignUp = async (req, res) => {
       console.log("User Saved in Database");
       return res
         .status(201)
-        .json({ success: "true", msg: "User Created Successfully" });
+        .json({ success: true, msg: "User Created Successfully" });
     })
     .catch((err) => {
       console.log("Error Occoured in Creating User", err);
