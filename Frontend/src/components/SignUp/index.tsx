@@ -15,7 +15,6 @@ import { SERVER_URL } from "../utils/constants";
 type Props = object;
 
 const Signup: React.FC<Props> = () => {
-
   const navigate = useNavigate();
 
   const handleSignup = async (e: any) => {
@@ -29,15 +28,18 @@ const Signup: React.FC<Props> = () => {
     console.log(userdata);
 
     await axios
-      .post(`${SERVER_URL}/api/v1/user/signup`, userdata,{
-        withCredentials: true
+      .post(`${SERVER_URL}/api/v1/user/signup`, userdata, {
+        withCredentials: true,
       })
       .then((res) => {
         console.log("success");
         console.log(res);
         // TODO : Set Link And add Cookie to the browser for SignUp
-        if (res.data.success === true) navigate("/signin");
-        else console.log("error");
+        if(res.data.success === true) {
+          navigate("/signin");
+        } else {
+          console.log("error");
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -92,8 +94,11 @@ const Signup: React.FC<Props> = () => {
             />
           </div>
           <div className="flex items-center text-sm mt-6 gap-4">
-            <Checkbox className="border-myGreen border-2 rounded-[5px]" required/> Agree
-            Terms & Conditions
+            <Checkbox
+              className="border-myGreen border-2 rounded-[5px]"
+              required
+            />{" "}
+            Agree Terms & Conditions
           </div>
           <div className="flex mt-6">
             <Button className="bg-[#46C96B] text-base mx-3 w-full text-white font-semibold rounded-xl py-4 ">

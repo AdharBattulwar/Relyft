@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SERVER_URL } from "@/components/utils/constants";
+// import { APIProvider, Map } from "@vis.gl/react-google-maps";
+import HomeMap from "./map";
 
 type Props = object;
 
@@ -40,8 +42,8 @@ const Home: React.FC<Props> = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 pt-20 pb-28 flex flex-col gap-6 h-screen w-screen overflow-y-scroll justify-end">
-        <div className="absolute top-20 left-4">
+      <div className="fixed bottom-0 pb-28 flex flex-col gap-6 h-screen w-screen overflow-y-scroll justify-end">
+        <div className="absolute z-50 top-20 left-4">
           <Popover>
             <PopoverTrigger>
               <Avatar>
@@ -66,6 +68,9 @@ const Home: React.FC<Props> = () => {
               </div>
             </PopoverContent>
           </Popover>
+        </div>
+        <div className="w-full h-full">
+          <HomeMap/>
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
           <div className="w-1/6 border-2 rounded-full my-4"></div>
