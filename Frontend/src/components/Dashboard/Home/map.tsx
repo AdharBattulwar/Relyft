@@ -1,5 +1,11 @@
 // import { APIProvider, Map } from "@vis.gl/react-google-maps";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { Input } from "@/components/ui/input";
+import {
+  GoogleMap,
+  Marker,
+  useLoadScript,
+  Autocomplete,
+} from "@react-google-maps/api";
 import React from "react";
 
 // const libraries = ["places"];
@@ -9,23 +15,24 @@ const mapContainerStyle = {
 };
 
 const HomeMap = () => {
-const [myLocation, setMyLocation] = React.useState<{ lat: number; lng: number } | null>(null);
+  const [myLocation, setMyLocation] = React.useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
-React.useEffect(() => {
+  React.useEffect(() => {
     window.navigator.geolocation.getCurrentPosition((position) => {
-        const center = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude, 
-        };
-        setMyLocation(center);
+      const center = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      setMyLocation(center);
     });
-}, []);
-
-  console.log(myLocation)
+  }, []);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
-    // libraries,
+    libraries: ["places"],
   });
 
   if (loadError) {
@@ -42,8 +49,21 @@ React.useEffect(() => {
           mapContainerStyle={mapContainerStyle}
           center={myLocation}
           zoom={20}
-        ></GoogleMap>
+          options={{
+            fullscreenControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            mapTypeControl: false,
+          }}
+        >
+          {/* <Marker position={myLocation} /> */}
+        </GoogleMap>
       )}
+      <div className="absolue z-50 top-20 left-4">
+        <Autocomplete>
+          <Input placeholder="Search" />
+        </Autocomplete>
+      </div>
     </>
   );
 };

@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { FaApple, FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaGithub } from "react-icons/fa";
 import { BsPersonCircle } from "react-icons/bs";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Checkbox } from "../ui/checkbox";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { SERVER_URL } from "../utils/constants";
+import googleAuth from "../AuthProviders/google";
+import facebookAuth from "../AuthProviders/facebook";
+import githubAuth from "../AuthProviders/github";
 
 type Props = object;
 
 const Signup: React.FC<Props> = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    console.log(user);
+  },[user]);
+
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
@@ -26,6 +35,7 @@ const Signup: React.FC<Props> = () => {
     };
 
     console.log(userdata);
+    console.log(user);
 
     await axios
       .post(`${SERVER_URL}/api/v1/user/signup`, userdata, {
@@ -35,7 +45,7 @@ const Signup: React.FC<Props> = () => {
         console.log("success");
         console.log(res);
         // TODO : Set Link And add Cookie to the browser for SignUp
-        if(res.data.success === true) {
+        if (res.data.success === true) {
           navigate("/signin");
         } else {
           console.log("error");
@@ -110,13 +120,13 @@ const Signup: React.FC<Props> = () => {
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="text-[#A5A5A5] text-base">Or Sign Up With</div>
         <div className="flex gap-4 items-center justify-center">
-          <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button onClick={()=>setUser(googleAuth)} className="p-4 bg-[#f2f2f2] rounded-xl ">
             <FcGoogle className="text-2xl" />
           </Button>
-          <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
-            <FaApple className="text-2xl text-gray-600" />
+          <Button onClick={githubAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
+            <FaGithub className="text-2xl text-gray-600" />
           </Button>
-          <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button onClick={facebookAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
             <FaFacebook className="text-2xl text-blue-500" />
           </Button>
         </div>

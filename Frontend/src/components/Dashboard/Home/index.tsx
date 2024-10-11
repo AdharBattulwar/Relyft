@@ -73,7 +73,7 @@ const Home: React.FC<Props> = () => {
           <HomeMap/>
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
-          <div className="w-1/6 border-2 rounded-full my-4"></div>
+          <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>
           <div className="w-full flex justify-between items-center">
             <div className="font-semibold text-base">Where To?</div>
             <div className="text-myGreen">Customize</div>

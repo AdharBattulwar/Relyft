@@ -1,34 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Button } from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
-import { FaApple, FaFacebook } from "react-icons/fa";
+import { FaApple, FaFacebook, FaGithub } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import { SERVER_URL } from "../utils/constants";
+import googleAuth from "../AuthProviders/google";
+import githubAuth from "../AuthProviders/github";
+import facebookAuth from "../AuthProviders/facebook";
+import { RiLoader4Fill } from "react-icons/ri";
+import { Oval } from "react-loader-spinner";
+import { BorderDottedIcon } from "@radix-ui/react-icons";
 
 type Props = object;
 
 const Signin: React.FC<Props> = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSignin = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
 
     const userdata = {
       email: e.target.email.value,
       password: e.target.password.value,
     };
-    console.log(userdata);
-
     await axios
       .post(`${SERVER_URL}/api/v1/user/signin`, userdata, {
         withCredentials: true,
       })
       .then((res) => {
+        setLoading(false);
         console.log("success");
         console.log(res);
         if (res.data.success === true) {
@@ -38,6 +45,7 @@ const Signin: React.FC<Props> = () => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
       });
   };
@@ -83,8 +91,25 @@ const Signin: React.FC<Props> = () => {
             </div>
           </Link>
           <div className="flex mt-12">
-            <Button className="bg-[#46C96B] text-base mx-3 w-full text-white font-semibold rounded-xl py-4 ">
-              Sign In
+            <Button
+              className="bg-[#46C96B] text-base mx-3 w-full text-white font-semibold rounded-xl py-4 "
+            >
+              {loading ? (
+                <div className="flex
+                 items-center justify-center gap-4"><Oval
+                  visible={true}
+                  height="20"
+                  width="40"
+                  color="#fff"
+                  ariaLabel="oval-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+                Sign In
+                </div>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </div>
         </form>
@@ -92,14 +117,17 @@ const Signin: React.FC<Props> = () => {
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="text-[#A5A5A5] text-sm">Or Sign In With</div>
         <div className="flex gap-4 items-center justify-center">
-          <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button onClick={googleAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
             <FcGoogle className="text-2xl" />
           </Button>
-          <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
-            <FaApple className="text-2xl text-gray-600" />
+          <Button onClick={githubAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
+            <FaGithub className="text-2xl text-gray-600" />
           </Button>
           <Button className="p-4 bg-[#f2f2f2] rounded-xl ">
-            <FaFacebook className="text-2xl text-blue-500" />
+            <FaFacebook
+              onClick={facebookAuth}
+              className="text-2xl text-blue-500"
+            />
           </Button>
         </div>
       </div>
