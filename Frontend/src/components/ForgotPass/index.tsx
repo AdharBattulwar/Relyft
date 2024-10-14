@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { HiOutlineMail } from "react-icons/hi";
 import { Input } from "../ui/input";
@@ -21,7 +21,7 @@ const ForgotPassword: React.FC = () => {
       await sendPasswordResetEmail(auth, email);
       setMessage("Verification email sent! Please check your inbox.");
       setEmail(""); // Clear email input
-    } catch (error) {
+    } catch (error:any) {
       console.error("Error during password reset:", error);
       setError("Error: " + error.message);
     }

@@ -2,9 +2,8 @@
 import { Input } from "@/components/ui/input";
 import {
   GoogleMap,
-  Marker,
   useLoadScript,
-  Autocomplete,
+  // Autocomplete,
 } from "@react-google-maps/api";
 import React from "react";
 
@@ -60,9 +59,9 @@ const HomeMap = () => {
         </GoogleMap>
       )}
       <div className="absolue z-50 top-20 left-4">
-        <Autocomplete>
+        {/* <Autocomplete>
           <Input placeholder="Search" />
-        </Autocomplete>
+        </Autocomplete> */}
       </div>
     </>
   );

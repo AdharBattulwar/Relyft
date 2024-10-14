@@ -23,7 +23,12 @@ type Props = object;
 const Home: React.FC<Props> = () => {
   const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useState({});
+  interface UserInfo {
+    avatar?: string;
+    // Add other properties if needed
+  }
+
+  const [userInfo, setUserInfo] = useState<UserInfo>({});
 
   const handleLogout = async () => {
     console.log("Logout Clicked");
@@ -71,8 +76,10 @@ const Home: React.FC<Props> = () => {
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src={userInfo.avatar} />
-                <AvatarFallback><img src="https://thumbs.dreamstime.com/b/creative-illustration-default-avatar-profile-placeholder-isolated-background-art-design-grey-photo-blank-template-mockup-144855718.jpg"></img></AvatarFallback>
+                <AvatarImage src={userInfo.avatar || ""} />
+                <AvatarFallback>
+                  <img src="https://thumbs.dreamstime.com/b/creative-illustration-default-avatar-profile-placeholder-isolated-background-art-design-grey-photo-blank-template-mockup-144855718.jpg"></img>
+                </AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>

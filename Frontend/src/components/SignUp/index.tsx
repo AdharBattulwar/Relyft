@@ -23,7 +23,7 @@ const Signup: React.FC<Props> = () => {
 
   useEffect(() => {
     userInfo
-      .then((res) => {
+      .then((res: any) => {
         console.log(res.user);
         if (res.user) {
           const userdata = {
