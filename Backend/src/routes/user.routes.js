@@ -7,6 +7,8 @@ import {
   handleRefreshAccessToken,
   handleUserLogin,
   handleUserSignUp,
+  handleUserSignUpGoogle,
+  handleUserLoginGoogle,
 } from "../controllers/user.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -16,7 +18,10 @@ const userRouter = Router();
 
 userRouter.route("/").get(handleGetAllUsers);
 userRouter.route("/signin").get().post(handleUserLogin);
+userRouter.route("/signin/google").get().post(handleUserLoginGoogle);
+userRouter.route("/signup/google").post(handleUserSignUpGoogle);
 userRouter.route("/logout").get(handleUserVerfication, handleLogoutUser);
+userRouter.route("/getUser").get(handleUserVerfication, handleGetCurrentUser);
 userRouter.route("/signup").post(
   // upload.fields([
   //   { name: "avatar", maxCount: 1 },

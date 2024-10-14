@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../Footer";
 import Location from "./location";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,6 +23,8 @@ type Props = object;
 const Home: React.FC<Props> = () => {
   const navigate = useNavigate();
 
+  const [userInfo, setUserInfo] = useState({});
+
   const handleLogout = async () => {
     console.log("Logout Clicked");
     await axios
@@ -40,6 +42,28 @@ const Home: React.FC<Props> = () => {
       });
   };
 
+  useEffect(() => {
+    // const token = localStorage.getItem('token')
+
+    axios
+      .get(`${SERVER_URL}/api/v1/user/getUser`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success == false) {
+          navigate("/signin");
+        }
+        console.log(res);
+        if (res.data.user) {
+          setUserInfo(res.data.user);
+          console.log(res.data.user.avatar);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <div className="fixed bottom-0 pb-28 flex flex-col gap-6 h-screen w-screen overflow-y-scroll justify-end">
@@ -47,8 +71,8 @@ const Home: React.FC<Props> = () => {
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src="https://res.cloudinary.com/dz9tzcoyr/image/upload/v1727515449/agnlcpo3zpr3zyxrj4so.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={userInfo.avatar} />
+                <AvatarFallback><img src="https://thumbs.dreamstime.com/b/creative-illustration-default-avatar-profile-placeholder-isolated-background-art-design-grey-photo-blank-template-mockup-144855718.jpg"></img></AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent>
@@ -70,7 +94,7 @@ const Home: React.FC<Props> = () => {
           </Popover>
         </div>
         <div className="w-full h-full">
-          <HomeMap/>
+          <HomeMap />
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
           <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>

@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema(
     },
     fullName: {
       type: String,
-      // required: true,
       trim: true,
       index: true,
     },
@@ -33,8 +32,6 @@ const UserSchema = new mongoose.Schema(
     // },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      unique: true,
     },
     refreshToken: {
       type: String,

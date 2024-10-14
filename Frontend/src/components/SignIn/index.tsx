@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Button } from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
-import { FaApple, FaFacebook, FaGithub } from "react-icons/fa";
+import { FaFacebook, FaGithub } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
@@ -12,20 +12,56 @@ import { SERVER_URL } from "../utils/constants";
 import googleAuth from "../AuthProviders/google";
 import githubAuth from "../AuthProviders/github";
 import facebookAuth from "../AuthProviders/facebook";
-import { RiLoader4Fill } from "react-icons/ri";
 import { Oval } from "react-loader-spinner";
-import { BorderDottedIcon } from "@radix-ui/react-icons";
 
 type Props = object;
 
 const Signin: React.FC<Props> = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(Promise.resolve({}));
+
+  useEffect(() => {
+    userInfo
+      .then((res: any) => {
+        console.log(res.user);
+        if (res.user) {
+          const userdata = {
+            email: res.user.email,
+          };
+          console.log(userdata);
+          if (userdata) {
+            axios
+              .post(
+                `${SERVER_URL}/api/v1/user/signin/google`,
+                userdata,
+                {
+                  withCredentials: true,
+                }
+              )
+              .then((res) => {
+                console.log(res);
+                // TODO : Set Link And add Cookie to the browser for SignUp
+                if (res.data.success === true) {
+                  navigate("/dashboard/home");
+                } else {
+                  console.log("error");
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userInfo]);
 
   const handleSignin = async (e: any) => {
-    setLoading(true);
     e.preventDefault();
-
+    setLoading(true);
     const userdata = {
       email: e.target.email.value,
       password: e.target.password.value,
@@ -91,21 +127,22 @@ const Signin: React.FC<Props> = () => {
             </div>
           </Link>
           <div className="flex mt-12">
-            <Button
-              className="bg-[#46C96B] text-base mx-3 w-full text-white font-semibold rounded-xl py-4 "
-            >
+            <Button className="bg-[#46C96B] text-base mx-3 w-full text-white font-semibold rounded-xl py-4 ">
               {loading ? (
-                <div className="flex
-                 items-center justify-center gap-4"><Oval
-                  visible={true}
-                  height="20"
-                  width="40"
-                  color="#fff"
-                  ariaLabel="oval-loading"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                />
-                Sign In
+                <div
+                  className="flex
+                 items-center justify-center gap-4"
+                >
+                  <Oval
+                    visible={true}
+                    height="20"
+                    width="40"
+                    color="#fff"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                  />
+                  Sign In
                 </div>
               ) : (
                 "Sign In"
@@ -117,7 +154,10 @@ const Signin: React.FC<Props> = () => {
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="text-[#A5A5A5] text-sm">Or Sign In With</div>
         <div className="flex gap-4 items-center justify-center">
-          <Button onClick={googleAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button
+            onClick={() => setUserInfo(googleAuth)}
+            className="p-4 bg-[#f2f2f2] rounded-xl "
+          >
             <FcGoogle className="text-2xl" />
           </Button>
           <Button onClick={githubAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">

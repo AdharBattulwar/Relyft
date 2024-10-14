@@ -64,6 +64,49 @@ const handleUserSignUp = async (req, res) => {
     });
 };
 
+const handleUserSignUpGoogle = async (req, res) => {
+  const { username, email, photoURL } = req.body;
+
+  if ([username, email].some((feilds) => feilds?.trim() === "")) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "Need to put the correct Data" });
+  }
+
+  const existingUser = await user.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (existingUser) {
+    return res.status(409).json({ success: false, msg: "User already Exists" });
+  }
+
+  if (!photoURL) {
+    res.status(400).json({ success: false, msg: "Avatar Url is required" });
+  }
+
+  console.log(username, email, photoURL);
+
+  await user
+    .create({
+      username: username,
+      email: email,
+      avatar: photoURL,
+    })
+    .then(() => {
+      console.log("User Saved in Database");
+      return res
+        .status(201)
+        .json({ success: true, msg: "User Created Successfully" });
+    })
+    .catch((err) => {
+      console.log("Error Occoured in Creating User", err);
+      return res
+        .status(401)
+        .json({ success: "false", msg: "User can not be created" });
+    });
+};
+
 const handleUserLogin = async (req, res) => {
   const { email, password, username } = req.body;
 
@@ -94,7 +137,42 @@ const handleUserLogin = async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None'
+    sameSite: "None",
+  };
+
+  return res
+    .status(200)
+    .cookie("AccessToken", accessToken, options)
+    .cookie("RefreshToken", refreshToken, options)
+    .json({
+      success: true,
+      msg: "User Authenticated Succesfully",
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+};
+
+const handleUserLoginGoogle = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, msg: "Email is Required" });
+  }
+
+  const userData = await user.findOne({ email });
+
+  if (!userData) {
+    return res.status(404).json({ success: false, msg: "User Not Found" });
+  }
+
+  const refreshToken = await userData.generateRefreshToken();
+  const accessToken = await userData.generateAccessToken();
+  userData.refreshToken = refreshToken;
+  await userData.save({ validateBeforeSave: false });
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
   };
 
   return res
@@ -124,7 +202,7 @@ const handleLogoutUser = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: "None",
     };
 
     res.clearCookie("AccessToken", options);
@@ -179,7 +257,7 @@ const handleRefreshAccessToken = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: "None",
     };
 
     res
@@ -238,4 +316,6 @@ export {
   handleRefreshAccessToken,
   handleChangePassword,
   handleGetCurrentUser,
+  handleUserSignUpGoogle,
+  handleUserLoginGoogle,
 };

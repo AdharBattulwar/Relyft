@@ -19,12 +19,44 @@ type Props = object;
 
 const Signup: React.FC<Props> = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
+  const [userInfo, setUserInfo] = useState(Promise.resolve({}));
 
   useEffect(() => {
-    console.log(user);
-  },[user]);
-
+    userInfo
+      .then((res) => {
+        console.log(res.user);
+        if (res.user) {
+          const userdata = {
+            username: res.user.displayName,
+            email: res.user.email,
+            photoURL: res.user.photoURL,
+          };
+          console.log(userdata);
+          if (userdata) {
+            axios
+              .post(`${SERVER_URL}/api/v1/user/signup/google`, userdata, {
+                withCredentials: true,
+              })
+              .then((res) => {
+                console.log("success");
+                console.log(res);
+                // TODO : Set Link And add Cookie to the browser for SignUp
+                if (res.data.success === true) {
+                  navigate("/signin");
+                } else {
+                  console.log("error");
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userInfo]);
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
@@ -35,7 +67,6 @@ const Signup: React.FC<Props> = () => {
     };
 
     console.log(userdata);
-    console.log(user);
 
     await axios
       .post(`${SERVER_URL}/api/v1/user/signup`, userdata, {
@@ -120,13 +151,19 @@ const Signup: React.FC<Props> = () => {
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="text-[#A5A5A5] text-base">Or Sign Up With</div>
         <div className="flex gap-4 items-center justify-center">
-          <Button onClick={()=>setUser(googleAuth)} className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button
+            onClick={() => setUserInfo(googleAuth)}
+            className="p-4 bg-[#f2f2f2] rounded-xl "
+          >
             <FcGoogle className="text-2xl" />
           </Button>
           <Button onClick={githubAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
             <FaGithub className="text-2xl text-gray-600" />
           </Button>
-          <Button onClick={facebookAuth} className="p-4 bg-[#f2f2f2] rounded-xl ">
+          <Button
+            onClick={facebookAuth}
+            className="p-4 bg-[#f2f2f2] rounded-xl "
+          >
             <FaFacebook className="text-2xl text-blue-500" />
           </Button>
         </div>
