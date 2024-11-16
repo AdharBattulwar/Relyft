@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { ReactNode } from "react";
 
 const AuthContext = createContext<{
   user: object | null;
@@ -7,15 +8,13 @@ const AuthContext = createContext<{
 }>({
   user: null,
   loginUser: () => {},
-  logoutUser: () => {}
+  logoutUser: () => {},
 });
-
-import { ReactNode } from "react";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<object | null>(null);
 
-  const loginUser = (userData:object) => {
+  const loginUser = (userData: object) => {
     setUser(userData);
   };
 

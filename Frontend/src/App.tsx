@@ -6,6 +6,7 @@ import ForgotPassword from "./components/ForgotPass";
 import ResetPass from "./components/ResetPassword";
 import Home from "./components/Dashboard/Home";
 import Profile from "./components/Dashboard/Profile";
+import BookRide from "./components/Dashboard/BookRide";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/reset" element={<ResetPass />} />
         <Route path="/dashboard/home" element={<Home />} />
         <Route path="/dashboard/Profile" element={<Profile />} />
+        <Route path="/dashboard/BookRide" element={<BookRide />} />
       </Routes>
     </>
   );

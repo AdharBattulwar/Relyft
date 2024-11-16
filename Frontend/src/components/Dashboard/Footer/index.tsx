@@ -17,7 +17,7 @@ const Footer: React.FC<Props> = () => {
             Home
           </div>
         </Link>
-        <Link to="/dashboard/home">
+        <Link to="/dashboard/BookRide">
           <div className="text-sm flex flex-col items-center justify-center gap-1">
             <FaClipboardList className="text-[27px] text-gray-400 text-[#46C96]" />
             Booking
