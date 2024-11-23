@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Select,
@@ -18,10 +18,25 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import HomeMap from "../Home/map";
 import { Link } from "react-router-dom";
+import { getSuggestions } from "./getSuggestions";
 
 type Props = object;
 
 const BookRide: React.FC<Props> = () => {
+  const [source, setSource] = useState("");
+  const [sourceSuggest, setSourceSuggest] = useState([]);
+
+  useEffect(() => {}, [sourceSuggest]);
+
+  const handleSouceChange = async (e: any) => {
+    setSource(e.target.value);
+    const suggestions = getSuggestions(source);
+    suggestions.then((response) => {
+      setSourceSuggest(response.data.suggestions);
+    });
+    console.log(sourceSuggest);
+  };
+
   const handleDrag = () => {
     console.log("Hello World");
   };
@@ -109,7 +124,18 @@ const BookRide: React.FC<Props> = () => {
         </div>
         <div className="flex items-center justify-center w-full mt-8 px-3 py-1 bg-[#F2F2F2] rounded-xl flex-col">
           <div className="text-sm w-full items-start">
-            <Input Icon={<FaRegDotCircle />} placeholder="Enter Pickup Point" />
+            <Input
+              Icon={<FaRegDotCircle />}
+              onChange={(e) => {
+                handleSouceChange(e);
+              }}
+              placeholder="Enter Pickup Point"
+            />
+            <div className="">
+              {sourceSuggest.map((suggestion: any) => {
+                return <h2>{suggestion.name}</h2>;
+              })}
+            </div>
           </div>
           <div className="w-full pl-8 flex items-center justify-between gap-1 overflow-hidden">
             <Separator orientation="vertical" className="bg-gray-300 ml-1" />

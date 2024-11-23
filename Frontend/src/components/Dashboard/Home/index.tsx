@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SERVER_URL } from "@/components/utils/constants";
 // import { APIProvider, Map } from "@vis.gl/react-google-maps";
-import HomeMap from "./map";
+// import HomeMap from "./map";
+import MapboxExample from "./mapbox";
 
 type Props = object;
 
@@ -100,8 +101,8 @@ const Home: React.FC<Props> = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="w-full h-full">
-          <HomeMap />
+        <div className="w-full h-full overflow-hidden">
+          <MapboxExample /> {/* Replace with HomeMap for Google Maps */}
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
           <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>

@@ -59,9 +59,7 @@ const HomeMap = () => {
         </GoogleMap>
       )}
       <div className="absolue z-50 top-20 left-4">
-        {/* <Autocomplete>
-          <Input placeholder="Search" />
-        </Autocomplete> */}
+        
       </div>
     </>
   );
