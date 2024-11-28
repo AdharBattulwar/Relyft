@@ -18,25 +18,27 @@ const MapboxExample = () => {
 
   useEffect(() => {
     mapboxgl.accessToken =
-      "pk.eyJ1IjoiYWRoYXJiYXR0dWx3YXIiLCJhIjoiY20zbzVqcTJ2MDAwcTJrcXVtNnZ5Y3cwOCJ9.TgqFqGcmxuiRIzShx4DPRA";
+      import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
     if (mapContainerRef.current && myLocation) {
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         // center: myLocation as [number, number],
         center: [77.5946, 12.9716],
-        zoom: 12,
+        zoom: 15,
       });
 
       mapRef.current.addControl(
         new mapboxgl.GeolocateControl({
           positionOptions: {
             enableHighAccuracy: true,
+            
           },
+          showAccuracyCircle: false,
           trackUserLocation: true,
           showUserHeading: true,
           
-        })
+        }),'bottom-right'
       );
     }
   });

@@ -16,30 +16,52 @@ import { IoIosAdd, IoMdSettings } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import HomeMap from "../Home/map";
+// import HomeMap from "../Home/map";
 import { Link } from "react-router-dom";
 import { getSuggestions } from "./getSuggestions";
+import getCoordinates from "./getCoordinates";
+import { getDistAndPath } from "../DistAndPath/getDistAndPath";
+// import MapboxExample from "../Home/mapbox";
 
 type Props = object;
 
 const BookRide: React.FC<Props> = () => {
   const [source, setSource] = useState("");
+  const [finalSource, setFinalSource] = useState("");
+  const [finalDestination, setFinalDestination] = useState("");
   const [sourceSuggest, setSourceSuggest] = useState([]);
+  const [destination, setDestination] = useState("");
+  const [destinationSuggest, setDestinationSuggest] = useState([]);
+  const [sourceCoordinates, setSourceCoordinates] = useState([]);
+  const [destinationCoordinates, setDestinationCoordinates] = useState([]);
 
-  useEffect(() => {}, [sourceSuggest]);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (source && finalSource === "") {
+        getSuggestions(source).then((response) => {
+          setSourceSuggest(response.data.suggestions);
+        });
+      }
+      if (destination && finalDestination === "") {
+        getSuggestions(destination).then((response) => {
+          setDestinationSuggest(response.data.suggestions);
+        });
+      }
+    }, 4000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [source, destination]);
 
-  const handleSouceChange = async (e: any) => {
-    setSource(e.target.value);
-    const suggestions = getSuggestions(source);
-    suggestions.then((response) => {
-      setSourceSuggest(response.data.suggestions);
+  const getLatAndLng = async () => {
+    await getCoordinates(finalSource.mapbox_id).then((response) => {
+      setSourceCoordinates(response);
     });
-    console.log(sourceSuggest);
+    await getCoordinates(finalDestination.mapbox_id).then((response) => {
+      setDestinationCoordinates(response);
+    });
+    getDistAndPath(sourceCoordinates, destinationCoordinates, "driving");
   };
 
-  const handleDrag = () => {
-    console.log("Hello World");
-  };
+  const handleDrag = () => {};
 
   return (
     <div className="fixed bottom-0 flex flex-col gap-6 h-screen w-screen overflow-y-hidden justify-end">
@@ -52,10 +74,11 @@ const BookRide: React.FC<Props> = () => {
         </div>
       </div>
       <div className="w-full h-full">
-        <HomeMap />
+        {/* <HomeMap /> */}
+        {/* <MapboxExample /> */}
       </div>
       <div
-        className="absolute py-3 z-50 h-4/5 max-h-[80%] mt-10 bg-white w-full flex px-5 flex-col rounded-xl justify-start items-center"
+        className="absolute py-3 z-50 h-4/5 max-h-[80%] mt-10 bg-white w-full flex px-5 flex-col rounded-xl justify-start overflow-y-auto items-center"
         draggable="true"
         onDrag={handleDrag}
       >
@@ -126,16 +149,13 @@ const BookRide: React.FC<Props> = () => {
           <div className="text-sm w-full items-start">
             <Input
               Icon={<FaRegDotCircle />}
-              onChange={(e) => {
-                handleSouceChange(e);
+              onInput={(e) => {
+                setSource((e.target as HTMLInputElement).value);
+                setFinalSource("");
               }}
+              value={source}
               placeholder="Enter Pickup Point"
             />
-            <div className="">
-              {sourceSuggest.map((suggestion: any) => {
-                return <h2>{suggestion.name}</h2>;
-              })}
-            </div>
           </div>
           <div className="w-full pl-8 flex items-center justify-between gap-1 overflow-hidden">
             <Separator orientation="vertical" className="bg-gray-300 ml-1" />
@@ -145,8 +165,64 @@ const BookRide: React.FC<Props> = () => {
             </div>
           </div>
           <div className="text-sm w-full">
-            <Input Icon={<FaLocationDot />} placeholder="Enter Drop Point" />
+            <Input
+              Icon={<FaLocationDot />}
+              onInput={(e) => {
+                setDestination((e.target as HTMLInputElement).value);
+                setFinalDestination("");
+              }}
+              value={destination}
+              placeholder="Enter Drop Point"
+            />
           </div>
+        </div>
+        <div className="w-full mt-8">
+          <div className="p-3 rounded-xl">
+            {sourceSuggest.length > 0 && finalSource.name !== source && (
+              <div>
+                {sourceSuggest.map((suggestion: any) => (
+                  <div
+                    key={suggestion.mapbox_id}
+                    className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
+                    onClick={() => {
+                      setFinalSource(suggestion);
+                      setSource(suggestion.name);
+                      setSourceSuggest([]);
+                    }}
+                  >
+                    <div className=""> {suggestion.name} </div>
+                    <div className="">{suggestion.full_address}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {destinationSuggest.length > 0 && (
+              <div>
+                {destinationSuggest.map((suggestion: any) => (
+                  <div
+                    key={suggestion.mapbox_id}
+                    className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
+                    onClick={() => {
+                      setFinalDestination(suggestion);
+                      setDestination(suggestion.name);
+                      setDestinationSuggest([]);
+                    }}
+                  >
+                    <div className=""> {suggestion.name} </div>
+                    <div className="">{suggestion.full_address}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="">
+          <Button
+            onClick={getLatAndLng}
+            className="bg-[#F2F2F2] gap-4 text-base w-full flex justify-start items-center px-4 text-black font-semibold rounded-xl py-4"
+          >
+            Book Ride
+          </Button>
         </div>
         <div className="w-full mt-8">
           <Button className="bg-[#F2F2F2] gap-4 text-base w-full flex justify-start items-center px-4 text-black font-semibold rounded-xl py-4">
