@@ -27,8 +27,14 @@ type Props = object;
 
 const BookRide: React.FC<Props> = () => {
   const [source, setSource] = useState("");
-  const [finalSource, setFinalSource] = useState("");
-  const [finalDestination, setFinalDestination] = useState("");
+  const [finalSource, setFinalSource] = useState<{
+    name: string;
+    mapbox_id: string;
+  } | null>(null);
+  const [finalDestination, setFinalDestination] = useState<{
+    name: string;
+    mapbox_id: string;
+  } | null>(null);
   const [sourceSuggest, setSourceSuggest] = useState([]);
   const [destination, setDestination] = useState("");
   const [destinationSuggest, setDestinationSuggest] = useState([]);
@@ -37,28 +43,31 @@ const BookRide: React.FC<Props> = () => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if (source && finalSource === "") {
+      if (source && finalSource === null) {
         getSuggestions(source).then((response) => {
           setSourceSuggest(response.data.suggestions);
         });
       }
-      if (destination && finalDestination === "") {
+      if (destination && finalDestination === null) {
         getSuggestions(destination).then((response) => {
           setDestinationSuggest(response.data.suggestions);
         });
       }
-    }, 4000);
+    }, 1000);
     return () => clearTimeout(delayDebounceFn);
   }, [source, destination]);
 
   const getLatAndLng = async () => {
-    await getCoordinates(finalSource.mapbox_id).then((response) => {
-      setSourceCoordinates(response);
-    });
-    await getCoordinates(finalDestination.mapbox_id).then((response) => {
-      setDestinationCoordinates(response);
-    });
-    getDistAndPath(sourceCoordinates, destinationCoordinates, "driving");
+    if (finalSource && finalDestination) {
+      await getCoordinates(finalSource.mapbox_id).then((response) => {
+        setSourceCoordinates(response);
+      });
+      await getCoordinates(finalDestination.mapbox_id).then((response) => {
+        setDestinationCoordinates(response);
+      });
+      getDistAndPath(sourceCoordinates, destinationCoordinates, "driving");
+      // TODO: Solve this error after clicking bookride
+    }
   };
 
   const handleDrag = () => {};
@@ -151,7 +160,7 @@ const BookRide: React.FC<Props> = () => {
               Icon={<FaRegDotCircle />}
               onInput={(e) => {
                 setSource((e.target as HTMLInputElement).value);
-                setFinalSource("");
+                setFinalSource(null);
               }}
               value={source}
               placeholder="Enter Pickup Point"
@@ -169,7 +178,7 @@ const BookRide: React.FC<Props> = () => {
               Icon={<FaLocationDot />}
               onInput={(e) => {
                 setDestination((e.target as HTMLInputElement).value);
-                setFinalDestination("");
+                setFinalDestination(null);
               }}
               value={destination}
               placeholder="Enter Drop Point"
@@ -178,7 +187,7 @@ const BookRide: React.FC<Props> = () => {
         </div>
         <div className="w-full mt-8">
           <div className="p-3 rounded-xl">
-            {sourceSuggest.length > 0 && finalSource.name !== source && (
+            {sourceSuggest.length > 0 && finalSource?.name !== source && (
               <div>
                 {sourceSuggest.map((suggestion: any) => (
                   <div
@@ -196,24 +205,25 @@ const BookRide: React.FC<Props> = () => {
                 ))}
               </div>
             )}
-            {destinationSuggest.length > 0 && (
-              <div>
-                {destinationSuggest.map((suggestion: any) => (
-                  <div
-                    key={suggestion.mapbox_id}
-                    className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
-                    onClick={() => {
-                      setFinalDestination(suggestion);
-                      setDestination(suggestion.name);
-                      setDestinationSuggest([]);
-                    }}
-                  >
-                    <div className=""> {suggestion.name} </div>
-                    <div className="">{suggestion.full_address}</div>
-                  </div>
-                ))}
-              </div>
-            )}
+            {destinationSuggest.length > 0 &&
+              finalDestination?.name !== destination && (
+                <div>
+                  {destinationSuggest.map((suggestion: any) => (
+                    <div
+                      key={suggestion.mapbox_id}
+                      className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
+                      onClick={() => {
+                        setFinalDestination(suggestion);
+                        setDestination(suggestion.name);
+                        setDestinationSuggest([]);
+                      }}
+                    >
+                      <div className=""> {suggestion.name} </div>
+                      <div className="">{suggestion.full_address}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
         </div>
         <div className="">
