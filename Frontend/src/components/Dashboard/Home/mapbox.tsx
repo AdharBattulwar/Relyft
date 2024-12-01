@@ -17,8 +17,10 @@ const MapboxExample = () => {
   }, []);
 
   useEffect(() => {
-    mapboxgl.accessToken =
-      import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+
+    console.log(mapboxgl.accessToken);
+    console.log(import.meta.env.VITE_MAPBOX_ACCESS_TOKEN);
 
     if (mapContainerRef.current && myLocation) {
       mapRef.current = new mapboxgl.Map({
@@ -32,13 +34,12 @@ const MapboxExample = () => {
         new mapboxgl.GeolocateControl({
           positionOptions: {
             enableHighAccuracy: true,
-            
           },
           showAccuracyCircle: false,
           trackUserLocation: true,
           showUserHeading: true,
-          
-        }),'bottom-right'
+        }),
+        "bottom-right"
       );
     }
   });
