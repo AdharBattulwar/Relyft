@@ -30,7 +30,7 @@ const ReactMap: React.FC<Props> = () => {
   }, [userLocation]);
 
   // Handle successful geolocation
-  const handleGeolocate = (event: mapboxgl.GeolocateResult) => {
+  const handleGeolocate = (event: GeolocationPosition) => {
     if (event.coords) {
       const { longitude, latitude } = event.coords;
       if (typeof longitude === "number" && typeof latitude === "number") {
@@ -42,7 +42,7 @@ const ReactMap: React.FC<Props> = () => {
   };
 
   // Handle geolocation errors
-  const handleGeolocateError = (error: any) => {
+  const handleGeolocateError = (error: GeolocationPositionError) => {
     console.error("Geolocation error:", error);
     // Optionally, set a default location or handle the error as needed
   };
