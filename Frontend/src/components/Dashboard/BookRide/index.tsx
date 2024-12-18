@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Select,
@@ -17,10 +17,11 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 // import HomeMap from "../Home/map";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getSuggestions } from "./getSuggestions";
 import getCoordinates from "./getCoordinates";
-import { getDistAndPath } from "../DistAndPath/getDistAndPath";
+// import { getDistAndPath } from "../DistAndPath/getDistAndPath";
+import { destinationCoordContext, sourceCoordContext } from "@/ContextApi/routeCoordContext";
 // import MapboxExample from "../Home/mapbox";
 
 type Props = object;
@@ -38,8 +39,8 @@ const BookRide: React.FC<Props> = () => {
   const [sourceSuggest, setSourceSuggest] = useState([]);
   const [destination, setDestination] = useState("");
   const [destinationSuggest, setDestinationSuggest] = useState([]);
-  const [sourceCoordinates, setSourceCoordinates] = useState([]);
-  const [destinationCoordinates, setDestinationCoordinates] = useState([]);
+  const { setSourceCoordinates} = useContext(sourceCoordContext);
+  const { setDestinationCoordinates} = useContext(destinationCoordContext);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -57,15 +58,18 @@ const BookRide: React.FC<Props> = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [source, destination]);
 
+  const navigate = useNavigate();
+
   const getLatAndLng = async () => {
     if (finalSource && finalDestination) {
       await getCoordinates(finalSource.mapbox_id).then((response) => {
         setSourceCoordinates(response);
+        // sourceCoordContext.Provider()
       });
       await getCoordinates(finalDestination.mapbox_id).then((response) => {
         setDestinationCoordinates(response);
       });
-      getDistAndPath(sourceCoordinates, destinationCoordinates, "driving");
+      navigate("/dashboard/home")
       // TODO: Solve this error after clicking bookride
     }
   };

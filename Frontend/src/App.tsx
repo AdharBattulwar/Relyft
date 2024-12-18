@@ -7,21 +7,45 @@ import ResetPass from "./components/ResetPassword";
 import Home from "./components/Dashboard/Home";
 import Profile from "./components/Dashboard/Profile";
 import BookRide from "./components/Dashboard/BookRide";
+import { UserLocationContext } from "./ContextApi/userLocationContext";
+import {
+  sourceCoordContext,
+  destinationCoordContext,
+} from "./ContextApi/routeCoordContext";
+import { useState } from "react";
 
 function App() {
+  const [sourceCoordinates, setSourceCoordinates] = useState([]);
+  const [destinationCoordinates, setDestinationCoordinates] = useState([]);
+
+  const [userLocation, setUserLocation] = useState<null | {
+    lat: number;
+    lng: number;
+  }>(null);
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Signup />} />
-        <Route path="/otp" element={<OtpVerification />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="/reset" element={<ResetPass />} />
-        <Route path="/dashboard/home" element={<Home />} />
-        <Route path="/dashboard/Profile" element={<Profile />} />
-        <Route path="/dashboard/BookRide" element={<BookRide />} />
-      </Routes>
+      <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
+        <sourceCoordContext.Provider
+          value={{ sourceCoordinates, setSourceCoordinates }}
+        >
+          <destinationCoordContext.Provider
+            value={{ destinationCoordinates, setDestinationCoordinates }}
+          >
+            <Routes>
+              <Route path="/" element={<Signup />} />
+              <Route path="/otp" element={<OtpVerification />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/forgot" element={<ForgotPassword />} />
+              <Route path="/reset" element={<ResetPass />} />
+              <Route path="/dashboard/home" element={<Home />} />
+              <Route path="/dashboard/Profile" element={<Profile />} />
+              <Route path="/dashboard/BookRide" element={<BookRide />} />
+            </Routes>
+          </destinationCoordContext.Provider>
+        </sourceCoordContext.Provider>
+      </UserLocationContext.Provider>
     </>
   );
 }
