@@ -14,6 +14,7 @@ import { SERVER_URL } from "../utils/constants";
 import googleAuth from "../AuthProviders/google";
 import facebookAuth from "../AuthProviders/facebook";
 import githubAuth from "../AuthProviders/github";
+import UnderDevAlert from "../Warnings/underDevAlert";
 
 type Props = object;
 
@@ -89,6 +90,7 @@ const Signup: React.FC<Props> = () => {
 
   return (
     <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
+      <UnderDevAlert />
       {/* TODO : Set Link */}
       <Link to={"/"}>
         <div className="absolute top-7 left-7">

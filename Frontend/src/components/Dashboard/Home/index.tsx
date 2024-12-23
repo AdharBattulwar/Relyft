@@ -68,8 +68,15 @@ const Home: React.FC<Props> = () => {
       })
       .catch((err) => {
         console.log(err);
+        if(err.response.data.success == false) {
+          navigate("/signin");
+        }
       });
-  }, [navigate]);
+  }, []);
+
+  useEffect(() => {
+    console.log(userInfo)
+  }, [userInfo]);
 
   return (
     <>

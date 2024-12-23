@@ -16,9 +16,9 @@ const Markers: React.FC<Props> = () => {
   const { userLocation } = useContext(UserLocationContext);
 
   // Debugging: Log the coordinates
-  console.log("User Location:", userLocation);
-  console.log("Source Coordinates:", sourceCoordinates);
-  console.log("Destination Coordinates:", destinationCoordinates);
+  // console.log("User Location:", userLocation);
+  // console.log("Source Coordinates:", sourceCoordinates);
+  // console.log("Destination Coordinates:", destinationCoordinates);
 
   return (
     <>
@@ -35,6 +35,8 @@ const Markers: React.FC<Props> = () => {
 
       {/* Source Marker */}
       {sourceCoordinates && typeof sourceCoordinates.lng === "number" && typeof sourceCoordinates.lat === "number" && (
+        <>
+        (console.log(sourceCoordinates))
         <Marker
           longitude={sourceCoordinates.lng}
           latitude={sourceCoordinates.lat}
@@ -42,6 +44,7 @@ const Markers: React.FC<Props> = () => {
         >
           <FaLocationDot className="text-green-500 text-2xl" />
         </Marker>
+        </>
       )}
 
       {/* Destination Marker */}

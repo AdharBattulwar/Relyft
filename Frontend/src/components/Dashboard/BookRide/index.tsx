@@ -20,8 +20,12 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { getSuggestions } from "./getSuggestions";
 import getCoordinates from "./getCoordinates";
-// import { getDistAndPath } from "../DistAndPath/getDistAndPath";
-import { destinationCoordContext, sourceCoordContext } from "@/ContextApi/routeCoordContext";
+import { getDistAndPath } from "../DistAndPath/getDistAndPath";
+import {
+  destinationCoordContext,
+  sourceCoordContext,
+} from "@/ContextApi/routeCoordContext";
+import { getRouteContext } from "@/ContextApi/SrcDstRouteContext";
 // import MapboxExample from "../Home/mapbox";
 
 type Props = object;
@@ -39,8 +43,13 @@ const BookRide: React.FC<Props> = () => {
   const [sourceSuggest, setSourceSuggest] = useState([]);
   const [destination, setDestination] = useState("");
   const [destinationSuggest, setDestinationSuggest] = useState([]);
-  const { setSourceCoordinates} = useContext(sourceCoordContext);
-  const { setDestinationCoordinates} = useContext(destinationCoordContext);
+  const { sourceCoordinates, setSourceCoordinates } =
+    useContext(sourceCoordContext);
+  const { destinationCoordinates, setDestinationCoordinates } = useContext(
+    destinationCoordContext
+  );
+
+  const { setSrcDstRoute } = useContext(getRouteContext);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -56,25 +65,39 @@ const BookRide: React.FC<Props> = () => {
       }
     }, 1000);
     return () => clearTimeout(delayDebounceFn);
-  }, [source, destination]);
+  }, [source, destination, finalSource, finalDestination]);
 
   const navigate = useNavigate();
 
   const getLatAndLng = async () => {
     if (finalSource && finalDestination) {
       await getCoordinates(finalSource.mapbox_id).then((response) => {
-        setSourceCoordinates(response);
-        // sourceCoordContext.Provider()
+        setSourceCoordinates({
+          lng: response[0],
+          lat: response[1],
+        });
       });
       await getCoordinates(finalDestination.mapbox_id).then((response) => {
-        setDestinationCoordinates(response);
+        setDestinationCoordinates({
+          lng: response[0],
+          lat: response[1],
+        });
       });
-      navigate("/dashboard/home")
-      // TODO: Solve this error after clicking bookride
+
+      if (sourceCoordinates.lng != null && destinationCoordinates.lng != null) {
+        getDistAndPath(
+          sourceCoordinates,
+          destinationCoordinates,
+          "driving"
+        ).then((response) => {
+          console.log(response);
+          setSrcDstRoute(response);
+          navigate("/dashboard/home");
+        });
+        // TODO: Solve this error after clicking bookride
+      }
     }
   };
-
-  const handleDrag = () => {};
 
   return (
     <div className="fixed bottom-0 flex flex-col gap-6 h-screen w-screen overflow-y-hidden justify-end">
@@ -90,11 +113,7 @@ const BookRide: React.FC<Props> = () => {
         {/* <HomeMap /> */}
         {/* <MapboxExample /> */}
       </div>
-      <div
-        className="absolute py-3 z-50 h-4/5 max-h-[80%] mt-10 bg-white w-full flex px-5 flex-col rounded-xl justify-start overflow-y-auto items-center"
-        draggable="true"
-        onDrag={handleDrag}
-      >
+      <div className="absolute py-3 z-50 h-4/5 max-h-[80%] mt-10 bg-white w-full flex px-5 flex-col rounded-xl justify-start overflow-y-auto items-center">
         <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>
         <div className="flex w-full gap-2 justify-between items-center">
           <div className="w-1/2">
@@ -193,39 +212,51 @@ const BookRide: React.FC<Props> = () => {
           <div className="p-3 rounded-xl">
             {sourceSuggest.length > 0 && finalSource?.name !== source && (
               <div>
-                {sourceSuggest.map((suggestion: any) => (
-                  <div
-                    key={suggestion.mapbox_id}
-                    className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
-                    onClick={() => {
-                      setFinalSource(suggestion);
-                      setSource(suggestion.name);
-                      setSourceSuggest([]);
-                    }}
-                  >
-                    <div className=""> {suggestion.name} </div>
-                    <div className="">{suggestion.full_address}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {destinationSuggest.length > 0 &&
-              finalDestination?.name !== destination && (
-                <div>
-                  {destinationSuggest.map((suggestion: any) => (
+                {sourceSuggest.map(
+                  (suggestion: {
+                    mapbox_id: string;
+                    name: string;
+                    full_address: string;
+                  }) => (
                     <div
                       key={suggestion.mapbox_id}
                       className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
                       onClick={() => {
-                        setFinalDestination(suggestion);
-                        setDestination(suggestion.name);
-                        setDestinationSuggest([]);
+                        setFinalSource(suggestion);
+                        setSource(suggestion.name);
+                        setSourceSuggest([]);
                       }}
                     >
                       <div className=""> {suggestion.name} </div>
                       <div className="">{suggestion.full_address}</div>
                     </div>
-                  ))}
+                  )
+                )}
+              </div>
+            )}
+            {destinationSuggest.length > 0 &&
+              finalDestination?.name !== destination && (
+                <div>
+                  {destinationSuggest.map(
+                    (suggestion: {
+                      mapbox_id: string;
+                      name: string;
+                      full_address: string;
+                    }) => (
+                      <div
+                        key={suggestion.mapbox_id}
+                        className="line-clamp-1 px-3 py-1 flex flex-col gap-1 justify-start items-start mb-1 hover:bg-gray-100 cursor-pointer rounded-xl"
+                        onClick={() => {
+                          setFinalDestination(suggestion);
+                          setDestination(suggestion.name);
+                          setDestinationSuggest([]);
+                        }}
+                      >
+                        <div className=""> {suggestion.name} </div>
+                        <div className="">{suggestion.full_address}</div>
+                      </div>
+                    )
+                  )}
                 </div>
               )}
           </div>
