@@ -67,11 +67,11 @@ const BookRide: React.FC<Props> = () => {
   const navigate = useNavigate();
 
   const getLatAndLng = async () => {
+    let localSourceCoords = null;
+    let localDestinationCoords = null;
     if (finalSource && finalDestination) {
-      const localSourceCoords = await getCoordinates(finalSource.mapbox_id);
-      const localDestinationCoords = await getCoordinates(
-        finalDestination.mapbox_id
-      );
+      localSourceCoords = await getCoordinates(finalSource.mapbox_id);
+      localDestinationCoords = await getCoordinates(finalDestination.mapbox_id);
 
       if (localSourceCoords && localDestinationCoords) {
         setSourceCoordinates({
