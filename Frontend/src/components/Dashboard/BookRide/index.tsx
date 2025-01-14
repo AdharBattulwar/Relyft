@@ -43,11 +43,8 @@ const BookRide: React.FC<Props> = () => {
   const [sourceSuggest, setSourceSuggest] = useState([]);
   const [destination, setDestination] = useState("");
   const [destinationSuggest, setDestinationSuggest] = useState([]);
-  const { sourceCoordinates, setSourceCoordinates } =
-    useContext(sourceCoordContext);
-  const { destinationCoordinates, setDestinationCoordinates } = useContext(
-    destinationCoordContext
-  );
+  const { setSourceCoordinates } = useContext(sourceCoordContext);
+  const { setDestinationCoordinates } = useContext(destinationCoordContext);
 
   const { setSrcDstRoute } = useContext(getRouteContext);
 
@@ -71,24 +68,38 @@ const BookRide: React.FC<Props> = () => {
 
   const getLatAndLng = async () => {
     if (finalSource && finalDestination) {
-      await getCoordinates(finalSource.mapbox_id).then((response) => {
-        setSourceCoordinates({
-          lng: response[0],
-          lat: response[1],
-        });
-      });
-      await getCoordinates(finalDestination.mapbox_id).then((response) => {
-        setDestinationCoordinates({
-          lng: response[0],
-          lat: response[1],
-        });
-      });
+      const localSourceCoords = await getCoordinates(finalSource.mapbox_id);
+      const localDestinationCoords = await getCoordinates(
+        finalDestination.mapbox_id
+      );
 
-      if (sourceCoordinates.lng != null && destinationCoordinates.lng != null) {
+      if (localSourceCoords && localDestinationCoords) {
+        setSourceCoordinates({
+          lng: localSourceCoords[0],
+          lat: localSourceCoords[1],
+        });
+        setDestinationCoordinates({
+          lng: localDestinationCoords[0],
+          lat: localDestinationCoords[1],
+        });
+      }
+
+      const SourceLngLat = {
+        lng: localSourceCoords[0],
+        lat: localSourceCoords[1],
+      };
+
+      const DestinationLngLat = {
+        lng: localDestinationCoords[0],
+        lat: localDestinationCoords[1],
+      };
+
+      if (SourceLngLat.lng != null && DestinationLngLat.lng != null) {
         getDistAndPath(
-          sourceCoordinates,
-          destinationCoordinates,
+          SourceLngLat,
+          DestinationLngLat,
           "driving"
+          //TODO: add the mode of transport here by user's choice
         ).then((response) => {
           console.log(response);
           setSrcDstRoute(response);

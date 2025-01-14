@@ -1,8 +1,8 @@
 // ReactMap.tsx
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Map from "react-map-gl";
+import Map, { GeolocateControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from "mapbox-gl";
 import { UserLocationContext } from "@/ContextApi/userLocationContext";
 import { getRouteContext } from "@/ContextApi/SrcDstRouteContext";
 import Markers from "./markers"; // Ensure correct path and casing
@@ -15,7 +15,7 @@ import Route from "./route";
 type Props = object;
 
 const ReactMap: React.FC<Props> = () => {
-  // const geoControlRef = useRef<mapboxgl.GeolocateControl>(null);
+  const geoControlRef = useRef<mapboxgl.GeolocateControl>(null);
   const { userLocation } = useContext(UserLocationContext);
   const mapRef = useRef<any>();
 
@@ -27,7 +27,7 @@ const ReactMap: React.FC<Props> = () => {
   const [viewState, setViewState] = useState({
     longitude: userLocation?.lng ?? 80, // Correct longitude
     latitude: userLocation?.lat ?? 20.3, // Correct latitude
-    zoom: 10,
+    zoom: 3,
   });
 
   // Update viewState when userLocation changes
@@ -75,7 +75,7 @@ const ReactMap: React.FC<Props> = () => {
         duration: 2000,
       });
     }
-  }, [sourceCoordinates, destinationCoordinates]);
+  }, [sourceCoordinates, destinationCoordinates, mapRef.current]);
 
   return (
     <div className="h-full w-full">
@@ -86,13 +86,13 @@ const ReactMap: React.FC<Props> = () => {
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         mapStyle="mapbox://styles/mapbox/streets-v9"
       >
-        {/* <GeolocateControl
+        <GeolocateControl
           ref={geoControlRef}
           position="bottom-right"
           trackUserLocation
-          onGeolocate={handleGeolocate}
-          onError={handleGeolocateError}
-        /> */}
+          // onGeolocate={handleGeolocate}
+          // onError={handleGeolocateError}
+        />
 
         <Markers />
 
