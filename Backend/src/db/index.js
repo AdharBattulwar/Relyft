@@ -1,18 +1,20 @@
-import mongoose from "mongoose"
-import {  apiResponse } from "../constants.js"
+import mongoose from "mongoose";
 
 const connection = async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI).then(()=>{
-            console.log("MongoDB connected Succesfully")
-        }).catch((err)=>{
-            console.log(err)
-            return apiResponse(400,false, "Error in connecting Mongodb database")
-        })
-    } catch (error) {
-        console.log(error)
-        return apiResponse(400,false, "Error in connecting to database")
-    }
-}
+  try {
+    await mongoose
+      .connect(process.env.MONGODB_URI)
+      .then(() => {
+        console.log("MongoDB connected Succesfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        process.exit(1);
+      });
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
 
-export default connection
+export default connection;
