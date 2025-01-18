@@ -61,7 +61,7 @@ export const useLocation = (username: string): UseLocationReturn => {
     const emitLocation = throttle((latitude: number, longitude: number) => {
       if (socket) {
         socket.emit("locationUpdate", {
-          id: socket.id,
+          id: socket.id || '',
           latitude,
           longitude,
         });
@@ -74,7 +74,7 @@ export const useLocation = (username: string): UseLocationReturn => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCurrentUser({
-            id: socket.id,
+            id: socket.id || '',
             username,
             latitude,
             longitude,
