@@ -12,9 +12,11 @@ import {
 } from "@/ContextApi/routeCoordContext";
 import Route from "./route";
 
-type Props = object;
+interface MapComponentProps {
+  username: string;
+}
 
-const ReactMap: React.FC<Props> = () => {
+const ReactMap: React.FC<MapComponentProps> = ({username}) => {
   const geoControlRef = useRef<mapboxgl.GeolocateControl>(null);
   const { userLocation } = useContext(UserLocationContext);
   const mapRef = useRef<any>();
@@ -94,7 +96,7 @@ const ReactMap: React.FC<Props> = () => {
           // onError={handleGeolocateError}
         />
 
-        <Markers />
+        <Markers username={username} />
 
         {srcDstRoute?.data?.routes ? (
           <Route

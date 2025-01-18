@@ -7,13 +7,17 @@ import {
   sourceCoordContext,
 } from "@/ContextApi/routeCoordContext";
 import { UserLocationContext } from "@/ContextApi/userLocationContext";
+import { useLocation } from "../../../hooks/useLocation";
 
-type Props = object;
+interface MapComponentProps {
+  username: string;
+}
 
-const Markers: React.FC<Props> = () => {
+const Markers: React.FC<MapComponentProps> = ({ username }) => {
   const { sourceCoordinates } = useContext(sourceCoordContext);
   const { destinationCoordinates } = useContext(destinationCoordContext);
   const { userLocation } = useContext(UserLocationContext);
+  const { currentUser, users } = useLocation(username);
 
   // Debugging: Log the coordinates
   // console.log("User Location:", userLocation);
@@ -33,30 +37,58 @@ const Markers: React.FC<Props> = () => {
         </Marker>
       )}
 
+      {/* Other User Location */}
+      {users
+        .filter((user) => user.id !== (currentUser?.id || ""))
+        .map((user) => {
+          <Marker
+            key={user.id}
+            longitude={user.longitude}
+            latitude={user.latitude}
+          >
+            <div style={{ color: "red" }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                fill="red"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
+              </svg>
+            </div>
+          </Marker>;
+        })}
+
       {/* Source Marker */}
-      {sourceCoordinates && typeof sourceCoordinates.lng === "number" && typeof sourceCoordinates.lat === "number" && (
-        <>
-        (console.log(sourceCoordinates))
-        <Marker
-          longitude={sourceCoordinates.lng}
-          latitude={sourceCoordinates.lat}
-          anchor="bottom"
-        >
-          <FaLocationDot className="text-green-500 text-2xl" />
-        </Marker>
-        </>
-      )}
+      {sourceCoordinates &&
+        typeof sourceCoordinates.lng === "number" &&
+        typeof sourceCoordinates.lat === "number" && (
+          <>
+            (console.log(sourceCoordinates))
+            <Marker
+              longitude={sourceCoordinates.lng}
+              latitude={sourceCoordinates.lat}
+              anchor="bottom"
+            >
+              <FaLocationDot className="text-green-500 text-2xl" />
+            </Marker>
+          </>
+        )}
 
       {/* Destination Marker */}
-      {destinationCoordinates && typeof destinationCoordinates.lng === "number" && typeof destinationCoordinates.lat === "number" && (
-        <Marker
-          longitude={destinationCoordinates.lng}
-          latitude={destinationCoordinates.lat}
-          anchor="bottom"
-        >
-          <FaLocationDot className="text-red-500 text-2xl" />
-        </Marker>
-      )}
+      {destinationCoordinates &&
+        typeof destinationCoordinates.lng === "number" &&
+        typeof destinationCoordinates.lat === "number" && (
+          <Marker
+            longitude={destinationCoordinates.lng}
+            latitude={destinationCoordinates.lat}
+            anchor="bottom"
+          >
+            <FaLocationDot className="text-red-500 text-2xl" />
+          </Marker>
+        )}
     </>
   );
 };

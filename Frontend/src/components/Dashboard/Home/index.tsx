@@ -27,6 +27,7 @@ const Home: React.FC<Props> = () => {
 
   interface UserInfo {
     avatar?: string;
+    username?: string | null;
     // Add other properties if needed
   }
 
@@ -68,14 +69,14 @@ const Home: React.FC<Props> = () => {
       })
       .catch((err) => {
         console.log(err);
-        if(err.response.data.success == false) {
+        if (err.response.data.success == false) {
           navigate("/signin");
         }
       });
   }, []);
 
   useEffect(() => {
-    console.log(userInfo)
+    console.log(userInfo);
   }, [userInfo]);
 
   return (
@@ -111,7 +112,7 @@ const Home: React.FC<Props> = () => {
         </div>
         <div className="w-full h-full overflow-hidden">
           {/* <MapboxExample /> Replace with HomeMap for Google Maps */}
-          <ReactMap />
+          <ReactMap username={userInfo.username || ""} />
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
           <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>
