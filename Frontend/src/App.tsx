@@ -13,6 +13,7 @@ import {
   destinationCoordContext,
 } from "./ContextApi/routeCoordContext";
 import { getRouteContext } from "./ContextApi/SrcDstRouteContext";
+import { getOverlapRouteContext } from "./ContextApi/OverlapPathContext";
 import { useState } from "react";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
   }>(null);
 
   const [srcDstRoute, setSrcDstRoute] = useState<null | object>(null);
+  const [overlapSrcDstRoute, setOverlapSrcDstRoute] = useState<null | object>(null);
 
   return (
     <>
@@ -42,6 +44,7 @@ function App() {
             value={{ destinationCoordinates, setDestinationCoordinates }}
           >
             <getRouteContext.Provider value={{ srcDstRoute, setSrcDstRoute }}>
+              <getOverlapRouteContext.Provider value={{ overlapSrcDstRoute, setOverlapSrcDstRoute }}>
               <Routes>
                 <Route path="/" element={<Signup />} />
                 <Route path="/otp" element={<OtpVerification />} />
@@ -54,6 +57,7 @@ function App() {
                 <Route path="/dashboard/Profile" element={<Profile />} />
                 <Route path="/dashboard/BookRide" element={<BookRide />} />
               </Routes>
+              </getOverlapRouteContext.Provider>
             </getRouteContext.Provider>
           </destinationCoordContext.Provider>
         </sourceCoordContext.Provider>
