@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Input } from "../ui/input";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -13,11 +13,13 @@ import googleAuth from "../AuthProviders/google";
 import githubAuth from "../AuthProviders/github";
 import facebookAuth from "../AuthProviders/facebook";
 import { Oval } from "react-loader-spinner";
+import AuthContext from "@/ContextApi/AuthContext";
 
 type Props = object;
 
 const Signin: React.FC<Props> = () => {
   const navigate = useNavigate();
+  const { loginUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(Promise.resolve({}));
 
@@ -32,17 +34,14 @@ const Signin: React.FC<Props> = () => {
           console.log(userdata);
           if (userdata) {
             axios
-              .post(
-                `${SERVER_URL}/api/v1/user/signin/google`,
-                userdata,
-                {
-                  withCredentials: true,
-                }
-              )
+              .post(`${SERVER_URL}/api/v1/user/signin/google`, userdata, {
+                withCredentials: true,
+              })
               .then((res) => {
                 console.log(res);
                 // TODO : Set Link And add Cookie to the browser for SignUp
                 if (res.data.success === true) {
+                  // localStorage.setItem("user",JSON.stringify(res.data));
                   navigate("/dashboard/home");
                 } else {
                   console.log("error");
@@ -66,25 +65,11 @@ const Signin: React.FC<Props> = () => {
       email: e.target.email.value,
       password: e.target.password.value,
     };
-    await axios
-      .post(`${SERVER_URL}/api/v1/user/signin`, userdata, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setLoading(false);
-        console.log("success");
-        console.log(res);
-        if (res.data.success === true) {
-          navigate("/dashboard/home");
-        } else {
-          console.log("error");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
+    await loginUser(userdata);
+    setLoading(false);
+    navigate("/dashboard/home");
   };
+
   return (
     <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
       <div className="absolute top-7 left-7">

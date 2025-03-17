@@ -137,7 +137,7 @@ const handleUserLogin = async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "None",
+    sameSite: "none",
   };
 
   return res
@@ -172,7 +172,7 @@ const handleUserLoginGoogle = async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "None",
+    sameSite: "none",
   };
 
   return res
@@ -202,7 +202,7 @@ const handleLogoutUser = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "none",
     };
 
     res.clearCookie("AccessToken", options);
@@ -257,7 +257,7 @@ const handleRefreshAccessToken = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "none",
     };
 
     res

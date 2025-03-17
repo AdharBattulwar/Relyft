@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Footer from "../Footer";
 import Location from "./location";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,71 +12,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { SERVER_URL } from "@/components/utils/constants";
-// import { APIProvider, Map } from "@vis.gl/react-google-maps";
-// import HomeMap from "./map";
-// import MapboxExample from "./mapbox";
 import ReactMap from "./reactMap";
+import AuthContext from "@/ContextApi/AuthContext";
 
 type Props = object;
 
 const Home: React.FC<Props> = () => {
-  const navigate = useNavigate();
+  const { user, logoutUser, fetchUser } = useContext(AuthContext);
 
   interface UserInfo {
     avatar?: string;
-    // Add other properties if needed
+    username?: string | null;
   }
 
   const [userInfo, setUserInfo] = useState<UserInfo>({});
 
-  const handleLogout = async () => {
-    console.log("Logout Clicked");
-    await axios
-      .get(`${SERVER_URL}/api/v1/user/logout`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log("success");
-        console.log(res);
-        if (res.data.success === true) navigate("/");
-        else console.log("error");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
-    // const token = localStorage.getItem('token')
-
-    axios
-      .get(`${SERVER_URL}/api/v1/user/getUser`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success == false) {
-          navigate("/signin");
-        }
-        console.log(res);
-        if (res.data.user) {
-          setUserInfo(res.data.user);
-          console.log(res.data.user.avatar);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        if(err.response.data.success == false) {
-          navigate("/signin");
-        }
-      });
+    fetchUser();
   }, []);
 
   useEffect(() => {
-    console.log(userInfo)
-  }, [userInfo]);
+    if (user) {
+      console.log(user);
+      setUserInfo(user);
+    }
+  }, [user,userInfo]);
 
   return (
     <>
@@ -85,7 +45,7 @@ const Home: React.FC<Props> = () => {
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src={userInfo.avatar || ""} />
+                <AvatarImage src={user?.avatar || ""} />
                 <AvatarFallback>
                   <img src="https://thumbs.dreamstime.com/b/creative-illustration-default-avatar-profile-placeholder-isolated-background-art-design-grey-photo-blank-template-mockup-144855718.jpg"></img>
                 </AvatarFallback>
@@ -101,7 +61,7 @@ const Home: React.FC<Props> = () => {
                 </Button>
                 <Button
                   className="flex items-center justify-center text-sm bg-green-100 w-full rounded-xl py-2"
-                  onClick={() => handleLogout()}
+                  onClick={logoutUser}
                 >
                   Logout
                 </Button>
@@ -110,8 +70,7 @@ const Home: React.FC<Props> = () => {
           </Popover>
         </div>
         <div className="w-full h-full overflow-hidden">
-          {/* <MapboxExample /> Replace with HomeMap for Google Maps */}
-          <ReactMap />
+          <ReactMap username={userInfo.username || ""} />
         </div>
         <div className="flex px-5 flex-col rounded-xl justify-between items-center">
           <div className="w-1/6 border-2 rounded-full mb-4 mt-1"></div>
