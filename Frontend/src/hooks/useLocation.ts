@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import socketIo, { Socket } from "socket.io-client";
 import { throttle } from "lodash";
+import { getRouteContext } from "@/ContextApi/SrcDstRouteContext";
 
 interface User {
   id: string;
@@ -12,7 +13,12 @@ interface User {
 interface UseLocationReturn {
   currentUser: User | null;
   users: User[];
+  rideCoords: Rides;
   error: string | null;
+}
+
+interface Rides {
+  coordinates: [number, number];
 }
 
 export const useLocation = (username: string): UseLocationReturn => {
@@ -20,11 +26,16 @@ export const useLocation = (username: string): UseLocationReturn => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [rideCoords, setRideCoords] = useState<Rides>({ coordinates: [0, 0] });
+
+  const { srcDstRoute } = useContext(getRouteContext);
 
   useEffect(() => {
     // Initialize Socket.io client
     const newSocket = socketIo(import.meta.env.VITE_SOCKET_URL as string);
     setSocket(newSocket);
+
+    setRideCoords(srcDstRoute?.data?.routes[0]?.geometry?.coordinates);
 
     // Handle socket connection
     newSocket.on("connect", () => {
@@ -35,6 +46,7 @@ export const useLocation = (username: string): UseLocationReturn => {
         username,
         latitude: 0, // Initial stationary position
         longitude: 0,
+        rideCoords: rideCoords,
       });
     });
 
@@ -52,7 +64,7 @@ export const useLocation = (username: string): UseLocationReturn => {
     return () => {
       newSocket.disconnect();
     };
-  }, [username]);
+  }, [username, rideCoords]);
 
   useEffect(() => {
     if (!socket) return;
@@ -61,7 +73,7 @@ export const useLocation = (username: string): UseLocationReturn => {
     const emitLocation = throttle((latitude: number, longitude: number) => {
       if (socket) {
         socket.emit("locationUpdate", {
-          id: socket.id || '',
+          id: socket.id || "",
           latitude,
           longitude,
         });
@@ -74,7 +86,7 @@ export const useLocation = (username: string): UseLocationReturn => {
         (position) => {
           const { latitude, longitude } = position.coords;
           setCurrentUser({
-            id: socket.id || '',
+            id: socket.id || "",
             username,
             latitude,
             longitude,
@@ -104,5 +116,5 @@ export const useLocation = (username: string): UseLocationReturn => {
     }
   }, [socket, username]);
 
-  return { currentUser, users, error };
+  return { currentUser, users, rideCoords, error };
 };
