@@ -15,6 +15,7 @@ import {
 import { getRouteContext } from "./ContextApi/SrcDstRouteContext";
 import { getOverlapRouteContext } from "./ContextApi/OverlapPathContext";
 import { useState } from "react";
+import { AuthProvider } from "./ContextApi/AuthContext";
 
 function App() {
   const [sourceCoordinates, setSourceCoordinates] = useState<null | {
@@ -32,36 +33,42 @@ function App() {
   }>(null);
 
   const [srcDstRoute, setSrcDstRoute] = useState<null | object>(null);
-  const [overlapSrcDstRoute, setOverlapSrcDstRoute] = useState<null | object>(null);
+  const [overlapSrcDstRoute, setOverlapSrcDstRoute] = useState<null | object>(
+    null
+  );
 
   return (
     <>
-      <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
-        <sourceCoordContext.Provider
-          value={{ sourceCoordinates, setSourceCoordinates }}
-        >
-          <destinationCoordContext.Provider
-            value={{ destinationCoordinates, setDestinationCoordinates }}
+      <AuthProvider>
+        <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
+          <sourceCoordContext.Provider
+            value={{ sourceCoordinates, setSourceCoordinates }}
           >
-            <getRouteContext.Provider value={{ srcDstRoute, setSrcDstRoute }}>
-              <getOverlapRouteContext.Provider value={{ overlapSrcDstRoute, setOverlapSrcDstRoute }}>
-              <Routes>
-                <Route path="/" element={<Signup />} />
-                <Route path="/otp" element={<OtpVerification />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/signin" element={<Signin />} />
-                <Route path="/forgot" element={<ForgotPassword />} />
-                <Route path="/reset" element={<ResetPass />} />
-                {/* <userLogin */}
-                <Route path="/dashboard/home" element={<Home />} />
-                <Route path="/dashboard/Profile" element={<Profile />} />
-                <Route path="/dashboard/BookRide" element={<BookRide />} />
-              </Routes>
-              </getOverlapRouteContext.Provider>
-            </getRouteContext.Provider>
-          </destinationCoordContext.Provider>
-        </sourceCoordContext.Provider>
-      </UserLocationContext.Provider>
+            <destinationCoordContext.Provider
+              value={{ destinationCoordinates, setDestinationCoordinates }}
+            >
+              <getRouteContext.Provider value={{ srcDstRoute, setSrcDstRoute }}>
+                <getOverlapRouteContext.Provider
+                  value={{ overlapSrcDstRoute, setOverlapSrcDstRoute }}
+                >
+                  <Routes>
+                    <Route path="/" element={<Signup />} />
+                    <Route path="/otp" element={<OtpVerification />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/signin" element={<Signin />} />
+                    <Route path="/forgot" element={<ForgotPassword />} />
+                    <Route path="/reset" element={<ResetPass />} />
+                    {/* <userLogin */}
+                    <Route path="/dashboard/home" element={<Home />} />
+                    <Route path="/dashboard/Profile" element={<Profile />} />
+                    <Route path="/dashboard/BookRide" element={<BookRide />} />
+                  </Routes>
+                </getOverlapRouteContext.Provider>
+              </getRouteContext.Provider>
+            </destinationCoordContext.Provider>
+          </sourceCoordContext.Provider>
+        </UserLocationContext.Provider>
+      </AuthProvider>
     </>
   );
 }

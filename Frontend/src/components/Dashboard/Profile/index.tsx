@@ -9,8 +9,13 @@ import { FaCcMastercard } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { IoMdHelpCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
+import AuthContext from "@/ContextApi/AuthContext";
+import { useContext } from "react";
 
 const Profile = () => {
+
+  const { user } = useContext(AuthContext);
+
   return (
     <>
       <div className="fixed bottom-0 pt-20 px-5 pb-28 flex flex-col gap-6 h-screen w-screen overflow-y-scroll justify-start">
@@ -24,9 +29,9 @@ const Profile = () => {
         <div className="flex flex-col justify-center items-center">
           <div className="text-lg font-semibold">Profile</div>
           <div className="my-8 flex flex-col gap-4 justify-center items-center">
-            <div className="flex size-32 bg-slate-400 rounded-full overflow-hidden">
+            <div className="flex size-32 items-center justify-center bg-myGreen rounded-full overflow-hidden">
               <Avatar>
-                <AvatarImage src="https://res.cloudinary.com/dz9tzcoyr/image/upload/v1727515449/agnlcpo3zpr3zyxrj4so.jpg" />
+                <AvatarImage src={user?.avatar || ""} className=" rounded-full scale-125"/>
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
