@@ -45,7 +45,19 @@ const Home: React.FC<Props> = () => {
           <Popover>
             <PopoverTrigger>
               <Avatar>
-                <AvatarImage src={user?.avatar || ""} />
+                <AvatarImage 
+                  src={user?.avatar?.includes('googleusercontent.com') 
+                    ? user?.avatar?.replace('=s96-c', '=s200-c')
+                    : user?.avatar || ""
+                  }
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = "https://ui-avatars.com/api/?name=" + (user?.username || "U");
+                  }}
+                />
                 <AvatarFallback>
                   <img src="https://thumbs.dreamstime.com/b/creative-illustration-default-avatar-profile-placeholder-isolated-background-art-design-grey-photo-blank-template-mockup-144855718.jpg"></img>
                 </AvatarFallback>

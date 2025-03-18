@@ -2,12 +2,14 @@ import { useState, useEffect, useContext } from "react";
 import socketIo, { Socket } from "socket.io-client";
 import { throttle } from "lodash";
 import { getRouteContext } from "@/ContextApi/SrcDstRouteContext";
+import AuthContext from "@/ContextApi/AuthContext";
 
 interface User {
   id: string;
   username: string;
   latitude: number;
   longitude: number;
+  avatar: string;  // Add avatar field
 }
 
 interface UseLocationReturn {
@@ -30,23 +32,25 @@ export const useLocation = (username: string): UseLocationReturn => {
 
   const { srcDstRoute } = useContext(getRouteContext);
 
+  // Add AuthContext
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
-    // Initialize Socket.io client
     const newSocket = socketIo(import.meta.env.VITE_SOCKET_URL as string);
     setSocket(newSocket);
 
     setRideCoords(srcDstRoute?.data?.routes[0]?.geometry?.coordinates);
 
-    // Handle socket connection
     newSocket.on("connect", () => {
       console.log("Connected to server");
-      // Emit 'join' event with user details
+      // Update join event to include avatar
       newSocket.emit("join", {
-        id: newSocket.id, // Using socket ID as user ID for simplicity
+        id: newSocket.id,
         username,
-        latitude: 0, // Initial stationary position
+        latitude: 0,
         longitude: 0,
         rideCoords: rideCoords,
+        avatar: user?.avatar, // Include avatar from AuthContext
       });
     });
 
@@ -64,21 +68,21 @@ export const useLocation = (username: string): UseLocationReturn => {
     return () => {
       newSocket.disconnect();
     };
-  }, [username, rideCoords]);
+  }, [username, user?.avatar, rideCoords, user]);
 
   useEffect(() => {
     if (!socket) return;
 
-    // Throttled function to emit location updates
     const emitLocation = throttle((latitude: number, longitude: number) => {
       if (socket) {
         socket.emit("locationUpdate", {
           id: socket.id || "",
           latitude,
           longitude,
+          avatar: user?.avatar, // Include avatar in location updates
         });
       }
-    }, 1000); // Adjust the throttle duration as needed
+    }, 1000);
 
     // Watch user's position
     if ("geolocation" in navigator) {
@@ -90,6 +94,7 @@ export const useLocation = (username: string): UseLocationReturn => {
             username,
             latitude,
             longitude,
+            avatar: user?.avatar || "" // Include avatar in currentUser
           });
 
           // Emit location update
@@ -114,7 +119,7 @@ export const useLocation = (username: string): UseLocationReturn => {
     } else {
       setError("Geolocation is not supported by your browser.");
     }
-  }, [socket, username]);
+  }, [socket, username, user]);
 
   return { currentUser, users, rideCoords, error };
 };
