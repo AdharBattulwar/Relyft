@@ -62,26 +62,49 @@ const Markers: React.FC<MapComponentProps> = ({ username }) => {
       )}
 
       {/* Other User Location */}
+      // In the users mapping section
       {users
         .filter((user) => user.id !== (currentUser?.id || ""))
         .map((user) => {
+          // Process Google profile image URL
+          const imageUrl = user.avatar?.includes('googleusercontent.com') 
+            ? user.avatar.replace('=s96-c', '=s200-c') // Increase size and maintain circular crop
+            : user.avatar;
+      
           return (
             <Marker
               key={user.id}
               longitude={user.longitude}
               latitude={user.latitude}
             >
-              <div style={{ color: "red" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  fill="red"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
-                </svg>
+              <div className="relative w-8 h-8">
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt={user.username}
+                    className="w-full h-full rounded-full border-2 border-red-500"
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "https://ui-avatars.com/api/?name=" + (user.username || "U");
+                    }}
+                  />
+                ) : (
+                  <div style={{ color: "red" }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      fill="red"
+                    >
+                      <path d="M0 0h24v24H0z" fill="none" />
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
+                    </svg>
+                  </div>
+                )}
               </div>
             </Marker>
           );
