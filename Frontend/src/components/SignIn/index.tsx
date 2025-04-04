@@ -14,6 +14,7 @@ import githubAuth from "../AuthProviders/github";
 import facebookAuth from "../AuthProviders/facebook";
 import { Oval } from "react-loader-spinner";
 import AuthContext from "@/ContextApi/AuthContext";
+import UnderDevAlert from "../Warnings/underDevAlert";
 
 type Props = object;
 
@@ -72,6 +73,7 @@ const Signin: React.FC<Props> = () => {
 
   return (
     <div className="px-5 py-6 flex flex-col gap-10 h-screen w-screen">
+      <UnderDevAlert/>
       <div className="absolute top-7 left-7">
         <Button className="p-2 rounded-full bg-[#F2F2F2]">
           <MdKeyboardBackspace className="text-xl " />
