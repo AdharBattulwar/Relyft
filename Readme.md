@@ -56,6 +56,9 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 ## License
 This project is licensed under the MIT License.
 
+## Made By
+@adharbattulwar
+
 ## Contact
 For any inquiries, please contact [adharbattulwar24@gmail.com](mailto:adharbattulwar24@gmail.com).
 
