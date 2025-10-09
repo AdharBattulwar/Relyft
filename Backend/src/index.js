@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import serverless from "serverless-http";
 
 dotenv.config({
-  path: "./src/config/.env",
+  path: ".env",
 });
 
 //Mongo connection
